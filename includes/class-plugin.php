@@ -51,6 +51,7 @@ final class Mercury_Bootstrapper_Plugin {
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-install-plugin-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-install-premium-plugin-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-homepage-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-security-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-premium-uploads.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-runner.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-admin-page.php';
@@ -73,6 +74,7 @@ final class Mercury_Bootstrapper_Plugin {
 		$this->runner->register_step( new Mercury_Bootstrapper_Install_Premium_Plugin_Step( 'elementor-pro', 'Elementor Pro' ) );
 		$this->runner->register_step( new Mercury_Bootstrapper_Install_Premium_Plugin_Step( 'wp-rocket', 'WP Rocket' ) );
 		$this->runner->register_step( new Mercury_Bootstrapper_Homepage_Step() );
+		$this->runner->register_step( new Mercury_Bootstrapper_Security_Step() );
 	}
 
 	private function register_hooks(): void {
