@@ -42,6 +42,8 @@ final class Mercury_Bootstrapper_Plugin {
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-cleanup-default-plugins-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-cleanup-default-themes-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-cleanup-widgets-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-core-settings-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-language-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-runner.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-admin-page.php';
 	}
@@ -51,6 +53,8 @@ final class Mercury_Bootstrapper_Plugin {
 		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Default_Content_Step() );
 		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Default_Plugins_Step() );
 		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Widgets_Step() );
+		$this->runner->register_step( new Mercury_Bootstrapper_Core_Settings_Step() );
+		$this->runner->register_step( new Mercury_Bootstrapper_Language_Step() );
 		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Default_Themes_Step() );
 	}
 
