@@ -1,0 +1,28 @@
+.mercury-bootstrapper__lead {
+	font-size: 14px;
+	color: #50575e;
+	max-width: 720px;
+}
+
+.mercury-bootstrapper__card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-left: 4px solid #2271b1;
+	padding: 16px 20px;
+	margin-top: 20px;
+	max-width: 720px;
+}
+
+.mercury-bootstrapper__card h2 {
+	margin-top: 0;
+	font-size: 15px;
+}
+
+.mercury-bootstrapper__card ul {
+	margin: 8px 0 0 20px;
+	list-style: disc;
+}
+
+.mercury-bootstrapper__card li {
+	margin-bottom: 6px;
+}

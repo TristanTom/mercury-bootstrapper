@@ -23,3 +23,7 @@ define( 'MERCURY_BOOTSTRAPPER_FILE', __FILE__ );
 define( 'MERCURY_BOOTSTRAPPER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MERCURY_BOOTSTRAPPER_URL', plugin_dir_url( __FILE__ ) );
 define( 'MERCURY_BOOTSTRAPPER_SLUG', 'mercury-bootstrapper' );
+
+require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-plugin.php';
+
+add_action( 'plugins_loaded', array( 'Mercury_Bootstrapper_Plugin', 'instance' ) );
