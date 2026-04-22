@@ -1,0 +1,50 @@
+name: Build release zip
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify plugin version matches tag
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          FILE_VERSION=$(grep -E "^[[:space:]]*\*[[:space:]]*Version:" mercury-bootstrapper.php | head -1 | sed -E 's/.*Version:[[:space:]]+([0-9.]+).*/\1/')
+          CONST_VERSION=$(grep -E "define\(\s*'MERCURY_BOOTSTRAPPER_VERSION'" mercury-bootstrapper.php | sed -E "s/.*'([0-9.]+)'.*/\1/")
+          echo "Tag: $TAG | Header: $FILE_VERSION | Constant: $CONST_VERSION"
+          if [ "$TAG" != "$FILE_VERSION" ] || [ "$TAG" != "$CONST_VERSION" ]; then
+            echo "::error::Tag $TAG does not match plugin version ($FILE_VERSION / $CONST_VERSION)"
+            exit 1
+          fi
+
+      - name: Build plugin zip
+        run: |
+          mkdir -p build/mercury-bootstrapper
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='build' \
+            --exclude='node_modules' \
+            --exclude='*.zip' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            ./ build/mercury-bootstrapper/
+          cd build
+          zip -r mercury-bootstrapper.zip mercury-bootstrapper
+          ls -la
+
+      - name: Create release and upload zip
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/mercury-bootstrapper.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
