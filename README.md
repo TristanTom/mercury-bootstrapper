@@ -13,7 +13,7 @@ Upload, activate, click **Run Full Setup** — and in ~2–3 minutes a fresh Wor
 - Premium plugins (Elementor Pro, WP Rocket) uploaded via the admin page as `.zip` files — the plugin installs and activates them
 - Empty "Avaleht" (home) page created and set as the static front page
 - Security hardening: XML-RPC disabled, trackbacks disabled, `readme.html` and `license.txt` removed
-- Launch Checklist shown at the end — what's done and what's still manual (licence keys, Complianz wizard, hosting-level SSL/SMTP, wp-config constants)
+- Launch Checklist shown at the end — what's done and what's still manual (licence keys, Complianz wizard, Yoast first-time config, hosting-level SSL/SMTP/PHP)
 
 ## Who it's for
 
