@@ -55,23 +55,30 @@ class Mercury_Bootstrapper_Admin_Page {
 		);
 
 		wp_localize_script( 'mercury-bootstrapper-setup', 'mercuryBootstrapper', array(
-			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'action'  => Mercury_Bootstrapper_Runner::AJAX_ACTION,
-			'nonce'   => wp_create_nonce( Mercury_Bootstrapper_Runner::NONCE_ACTION ),
-			'steps'   => $this->get_step_list_for_js(),
-			'upload'  => array(
+			'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+			'action'    => Mercury_Bootstrapper_Runner::AJAX_ACTION,
+			'nonce'     => wp_create_nonce( Mercury_Bootstrapper_Runner::NONCE_ACTION ),
+			'steps'     => $this->get_step_list_for_js(),
+			'upload'    => array(
 				'action' => Mercury_Bootstrapper_Premium_Uploads::AJAX_ACTION,
 				'nonce'  => wp_create_nonce( Mercury_Bootstrapper_Premium_Uploads::NONCE_ACTION ),
 			),
-			'i18n'    => array(
-				'running'       => __( 'Running…', 'mercury-bootstrapper' ),
-				'completed'     => __( 'Completed', 'mercury-bootstrapper' ),
-				'failed'        => __( 'Failed', 'mercury-bootstrapper' ),
-				'retry'         => __( 'Retry Failed', 'mercury-bootstrapper' ),
-				'requestError'  => __( 'Request error', 'mercury-bootstrapper' ),
-				'uploading'     => __( 'Uploading…', 'mercury-bootstrapper' ),
-				'uploaded'      => __( 'Uploaded', 'mercury-bootstrapper' ),
-				'uploadFailed'  => __( 'Upload failed', 'mercury-bootstrapper' ),
+			'uninstall' => array(
+				'action' => Mercury_Bootstrapper_Uninstaller::AJAX_ACTION,
+				'nonce'  => wp_create_nonce( Mercury_Bootstrapper_Uninstaller::NONCE_ACTION ),
+			),
+			'i18n'      => array(
+				'running'          => __( 'Running…', 'mercury-bootstrapper' ),
+				'completed'        => __( 'Completed', 'mercury-bootstrapper' ),
+				'failed'           => __( 'Failed', 'mercury-bootstrapper' ),
+				'retry'            => __( 'Retry Failed', 'mercury-bootstrapper' ),
+				'requestError'     => __( 'Request error', 'mercury-bootstrapper' ),
+				'uploading'        => __( 'Uploading…', 'mercury-bootstrapper' ),
+				'uploaded'         => __( 'Uploaded', 'mercury-bootstrapper' ),
+				'uploadFailed'     => __( 'Upload failed', 'mercury-bootstrapper' ),
+				'uninstallConfirm' => __( "Deactivate and delete Mercury Bootstrapper?\n\nThis removes the plugin files, options, and uploaded zip files.\nThe XML-RPC mu-plugin will remain in place.", 'mercury-bootstrapper' ),
+				'uninstalling'     => __( 'Uninstalling…', 'mercury-bootstrapper' ),
+				'uninstallFailed'  => __( 'Uninstall failed', 'mercury-bootstrapper' ),
 			),
 		) );
 	}
@@ -147,7 +154,68 @@ class Mercury_Bootstrapper_Admin_Page {
 					</li>
 				<?php endforeach; ?>
 			</ol>
+
+			<h2><?php esc_html_e( 'Launch checklist — manual steps', 'mercury-bootstrapper' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'These cannot be automated. Do them before handing the site over.', 'mercury-bootstrapper' ); ?>
+			</p>
+			<ul class="mercury-launch-checklist">
+				<?php foreach ( $this->get_launch_checklist() as $item ) : ?>
+					<li>
+						<strong><?php echo esc_html( $item['label'] ); ?></strong>
+						<?php if ( ! empty( $item['link'] ) ) : ?>
+							— <a href="<?php echo esc_url( $item['link'] ); ?>"><?php echo esc_html( $item['link_label'] ); ?></a>
+						<?php endif; ?>
+						<div class="mercury-launch-checklist__note"><?php echo esc_html( $item['note'] ); ?></div>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+
+			<h2><?php esc_html_e( 'Remove plugin', 'mercury-bootstrapper' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'Once the setup is complete and the manual steps are done, remove this plugin. The XML-RPC mu-plugin stays in place.', 'mercury-bootstrapper' ); ?>
+			</p>
+			<div class="mercury-uninstall">
+				<button type="button" class="button button-secondary" id="mercury-bootstrapper-uninstall">
+					<?php esc_html_e( 'Deactivate &amp; Delete', 'mercury-bootstrapper' ); ?>
+				</button>
+				<span class="mercury-uninstall__status" id="mercury-bootstrapper-uninstall-status" aria-live="polite"></span>
+			</div>
 		</div>
 		<?php
+	}
+
+	/** @return array<int, array{label: string, note: string, link?: string, link_label?: string}> */
+	private function get_launch_checklist(): array {
+		return array(
+			array(
+				'label'      => __( 'Elementor Pro licence key', 'mercury-bootstrapper' ),
+				'note'       => __( 'Required for Pro templates, Theme Builder, and Form integrations.', 'mercury-bootstrapper' ),
+				'link'       => admin_url( 'admin.php?page=elementor-license' ),
+				'link_label' => __( 'Elementor → License', 'mercury-bootstrapper' ),
+			),
+			array(
+				'label'      => __( 'WP Rocket licence key', 'mercury-bootstrapper' ),
+				'note'       => __( 'Without a licence, WP Rocket stays inactive.', 'mercury-bootstrapper' ),
+				'link'       => admin_url( 'options-general.php?page=wprocket' ),
+				'link_label' => __( 'Settings → WP Rocket', 'mercury-bootstrapper' ),
+			),
+			array(
+				'label'      => __( 'Complianz wizard', 'mercury-bootstrapper' ),
+				'note'       => __( 'Run the wizard: pick region (EU), languages, company info. Complianz does not generate policy pages automatically.', 'mercury-bootstrapper' ),
+				'link'       => admin_url( 'admin.php?page=complianz' ),
+				'link_label' => __( 'Complianz → Wizard', 'mercury-bootstrapper' ),
+			),
+			array(
+				'label'      => __( 'Yoast SEO first-time configuration', 'mercury-bootstrapper' ),
+				'note'       => __( 'Run the setup wizard: site type, organization info, social profiles.', 'mercury-bootstrapper' ),
+				'link'       => admin_url( 'admin.php?page=wpseo_dashboard' ),
+				'link_label' => __( 'SEO → Dashboard', 'mercury-bootstrapper' ),
+			),
+			array(
+				'label' => __( 'Hosting-level configuration', 'mercury-bootstrapper' ),
+				'note'  => __( 'SSL certificate, SMTP (transactional email), PHP version — done in the host control panel, not in WordPress.', 'mercury-bootstrapper' ),
+			),
+		);
 	}
 }

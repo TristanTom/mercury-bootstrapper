@@ -188,4 +188,55 @@
 	}
 
 	wirePremiumUploads();
+
+	function wireUninstall() {
+		if ( ! config.uninstall ) {
+			return;
+		}
+		var button = document.getElementById( 'mercury-bootstrapper-uninstall' );
+		var status = document.getElementById( 'mercury-bootstrapper-uninstall-status' );
+		if ( ! button ) {
+			return;
+		}
+		button.addEventListener( 'click', function () {
+			if ( ! window.confirm( config.i18n.uninstallConfirm ) ) {
+				return;
+			}
+			button.disabled = true;
+			if ( status ) {
+				status.textContent = config.i18n.uninstalling;
+			}
+			var body = new URLSearchParams();
+			body.set( 'action', config.uninstall.action );
+			body.set( 'nonce', config.uninstall.nonce );
+
+			fetch( config.ajaxUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+				body: body.toString(),
+			} )
+				.then( function ( r ) { return r.json(); } )
+				.then( function ( json ) {
+					if ( json && json.success && json.data && json.data.redirect ) {
+						window.location.href = json.data.redirect;
+						return;
+					}
+					button.disabled = false;
+					if ( status ) {
+						status.textContent = config.i18n.uninstallFailed + ': ' +
+							( ( json && json.data && json.data.message ) || config.i18n.requestError );
+					}
+				} )
+				.catch( function ( err ) {
+					button.disabled = false;
+					if ( status ) {
+						status.textContent = config.i18n.uninstallFailed + ': ' +
+							( err && err.message ? err.message : config.i18n.requestError );
+					}
+				} );
+		} );
+	}
+
+	wireUninstall();
 } )();

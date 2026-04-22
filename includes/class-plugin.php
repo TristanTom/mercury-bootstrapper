@@ -16,6 +16,7 @@ final class Mercury_Bootstrapper_Plugin {
 	private Mercury_Bootstrapper_Runner $runner;
 	private Mercury_Bootstrapper_Admin_Page $admin_page;
 	private Mercury_Bootstrapper_Premium_Uploads $premium_uploads;
+	private Mercury_Bootstrapper_Uninstaller $uninstaller;
 
 	public static function instance(): Mercury_Bootstrapper_Plugin {
 		if ( null === self::$instance ) {
@@ -29,6 +30,7 @@ final class Mercury_Bootstrapper_Plugin {
 
 		$this->runner          = new Mercury_Bootstrapper_Runner();
 		$this->premium_uploads = new Mercury_Bootstrapper_Premium_Uploads();
+		$this->uninstaller     = new Mercury_Bootstrapper_Uninstaller();
 		$this->register_steps();
 
 		$this->admin_page = new Mercury_Bootstrapper_Admin_Page( $this->runner, $this->premium_uploads );
@@ -36,6 +38,7 @@ final class Mercury_Bootstrapper_Plugin {
 		$this->register_hooks();
 		$this->runner->register_hooks();
 		$this->premium_uploads->register_hooks();
+		$this->uninstaller->register_hooks();
 	}
 
 	private function load_dependencies(): void {
@@ -53,6 +56,7 @@ final class Mercury_Bootstrapper_Plugin {
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-homepage-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-security-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-premium-uploads.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-uninstaller.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-runner.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-admin-page.php';
 	}
