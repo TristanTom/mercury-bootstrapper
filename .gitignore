@@ -1,0 +1,26 @@
+# Secrets — never commit
+.env
+.env.*
+*.key
+*.pem
+secrets/
+
+# Temp / build
+.tmp/
+dist/
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.sublime-*
+
+# PHP
+vendor/
+composer.lock
