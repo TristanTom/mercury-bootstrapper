@@ -38,12 +38,20 @@ final class Mercury_Bootstrapper_Plugin {
 	private function load_dependencies(): void {
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-sanity-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-cleanup-default-content-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-cleanup-default-plugins-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-cleanup-default-themes-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-cleanup-widgets-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-runner.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-admin-page.php';
 	}
 
 	private function register_steps(): void {
 		$this->runner->register_step( new Mercury_Bootstrapper_Sanity_Step() );
+		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Default_Content_Step() );
+		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Default_Plugins_Step() );
+		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Widgets_Step() );
+		$this->runner->register_step( new Mercury_Bootstrapper_Cleanup_Default_Themes_Step() );
 	}
 
 	private function register_hooks(): void {
