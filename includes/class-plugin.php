@@ -13,6 +13,7 @@ final class Mercury_Bootstrapper_Plugin {
 
 	private static ?Mercury_Bootstrapper_Plugin $instance = null;
 
+	private Mercury_Bootstrapper_Runner $runner;
 	private Mercury_Bootstrapper_Admin_Page $admin_page;
 
 	public static function instance(): Mercury_Bootstrapper_Plugin {
@@ -24,12 +25,25 @@ final class Mercury_Bootstrapper_Plugin {
 
 	private function __construct() {
 		$this->load_dependencies();
-		$this->admin_page = new Mercury_Bootstrapper_Admin_Page();
+
+		$this->runner = new Mercury_Bootstrapper_Runner();
+		$this->register_steps();
+
+		$this->admin_page = new Mercury_Bootstrapper_Admin_Page( $this->runner );
+
 		$this->register_hooks();
+		$this->runner->register_hooks();
 	}
 
 	private function load_dependencies(): void {
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-sanity-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-runner.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-admin-page.php';
+	}
+
+	private function register_steps(): void {
+		$this->runner->register_step( new Mercury_Bootstrapper_Sanity_Step() );
 	}
 
 	private function register_hooks(): void {
