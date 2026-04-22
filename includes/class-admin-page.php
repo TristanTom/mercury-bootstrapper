@@ -15,9 +15,11 @@ class Mercury_Bootstrapper_Admin_Page {
 	const CAPABILITY = 'manage_options';
 
 	private Mercury_Bootstrapper_Runner $runner;
+	private Mercury_Bootstrapper_Premium_Uploads $premium_uploads;
 
-	public function __construct( Mercury_Bootstrapper_Runner $runner ) {
-		$this->runner = $runner;
+	public function __construct( Mercury_Bootstrapper_Runner $runner, Mercury_Bootstrapper_Premium_Uploads $premium_uploads ) {
+		$this->runner          = $runner;
+		$this->premium_uploads = $premium_uploads;
 	}
 
 	public function register_menu(): void {
@@ -57,12 +59,19 @@ class Mercury_Bootstrapper_Admin_Page {
 			'action'  => Mercury_Bootstrapper_Runner::AJAX_ACTION,
 			'nonce'   => wp_create_nonce( Mercury_Bootstrapper_Runner::NONCE_ACTION ),
 			'steps'   => $this->get_step_list_for_js(),
+			'upload'  => array(
+				'action' => Mercury_Bootstrapper_Premium_Uploads::AJAX_ACTION,
+				'nonce'  => wp_create_nonce( Mercury_Bootstrapper_Premium_Uploads::NONCE_ACTION ),
+			),
 			'i18n'    => array(
-				'running'   => __( 'Running…', 'mercury-bootstrapper' ),
-				'completed' => __( 'Completed', 'mercury-bootstrapper' ),
-				'failed'    => __( 'Failed', 'mercury-bootstrapper' ),
-				'retry'     => __( 'Retry Failed', 'mercury-bootstrapper' ),
-				'requestError' => __( 'Request error', 'mercury-bootstrapper' ),
+				'running'       => __( 'Running…', 'mercury-bootstrapper' ),
+				'completed'     => __( 'Completed', 'mercury-bootstrapper' ),
+				'failed'        => __( 'Failed', 'mercury-bootstrapper' ),
+				'retry'         => __( 'Retry Failed', 'mercury-bootstrapper' ),
+				'requestError'  => __( 'Request error', 'mercury-bootstrapper' ),
+				'uploading'     => __( 'Uploading…', 'mercury-bootstrapper' ),
+				'uploaded'      => __( 'Uploaded', 'mercury-bootstrapper' ),
+				'uploadFailed'  => __( 'Upload failed', 'mercury-bootstrapper' ),
 			),
 		) );
 	}
@@ -98,6 +107,25 @@ class Mercury_Bootstrapper_Admin_Page {
 				);
 				?>
 			</p>
+
+			<h2><?php esc_html_e( 'Premium plugin zip uploads', 'mercury-bootstrapper' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'Upload Elementor Pro and WP Rocket zip files before running the setup. If a zip is not uploaded, that step is skipped.', 'mercury-bootstrapper' ); ?>
+			</p>
+			<ul class="mercury-premium-uploads">
+				<?php foreach ( $this->premium_uploads->get_allowed_slugs() as $slug => $label ) :
+					$has_upload = null !== Mercury_Bootstrapper_Premium_Uploads::get_stored_path( $slug );
+					?>
+					<li class="mercury-premium-upload" data-slug="<?php echo esc_attr( $slug ); ?>">
+						<span class="mercury-premium-upload__label"><?php echo esc_html( $label ); ?></span>
+						<input type="file" accept=".zip,application/zip" class="mercury-premium-upload__input" />
+						<button type="button" class="button mercury-premium-upload__button"><?php esc_html_e( 'Upload zip', 'mercury-bootstrapper' ); ?></button>
+						<span class="mercury-premium-upload__status<?php echo $has_upload ? ' is-ok' : ''; ?>">
+							<?php echo $has_upload ? esc_html__( 'Zip on file — ready to install.', 'mercury-bootstrapper' ) : esc_html__( 'No zip uploaded yet.', 'mercury-bootstrapper' ); ?>
+						</span>
+					</li>
+				<?php endforeach; ?>
+			</ul>
 
 			<div class="mercury-bootstrapper__actions">
 				<button type="button" class="button button-primary button-hero" id="mercury-bootstrapper-run">

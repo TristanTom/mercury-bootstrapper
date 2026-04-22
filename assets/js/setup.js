@@ -130,4 +130,62 @@
 	if ( retryButton ) {
 		retryButton.addEventListener( 'click', function () { runAll( true ); } );
 	}
+
+	function wirePremiumUploads() {
+		if ( ! config.upload ) {
+			return;
+		}
+		var items = document.querySelectorAll( '.mercury-premium-upload' );
+		Array.prototype.forEach.call( items, function ( item ) {
+			var slug     = item.dataset.slug;
+			var input    = item.querySelector( '.mercury-premium-upload__input' );
+			var button   = item.querySelector( '.mercury-premium-upload__button' );
+			var statusEl = item.querySelector( '.mercury-premium-upload__status' );
+			if ( ! slug || ! input || ! button || ! statusEl ) {
+				return;
+			}
+			button.addEventListener( 'click', function () {
+				var file = input.files && input.files[ 0 ];
+				if ( ! file ) {
+					return;
+				}
+				var form = new FormData();
+				form.append( 'action', config.upload.action );
+				form.append( 'nonce', config.upload.nonce );
+				form.append( 'slug', slug );
+				form.append( 'zip', file );
+
+				button.disabled = true;
+				statusEl.classList.remove( 'is-ok', 'is-error' );
+				statusEl.textContent = config.i18n.uploading;
+
+				fetch( config.ajaxUrl, {
+					method: 'POST',
+					credentials: 'same-origin',
+					body: form,
+				} )
+					.then( function ( r ) { return r.json(); } )
+					.then( function ( json ) {
+						if ( json && json.success ) {
+							statusEl.classList.add( 'is-ok' );
+							statusEl.textContent = config.i18n.uploaded + ' — ' + ( ( json.data && json.data.message ) || '' );
+						} else {
+							statusEl.classList.add( 'is-error' );
+							statusEl.textContent = config.i18n.uploadFailed + ': ' +
+								( ( json && json.data && json.data.message ) || config.i18n.requestError );
+						}
+					} )
+					.catch( function ( err ) {
+						statusEl.classList.add( 'is-error' );
+						statusEl.textContent = config.i18n.uploadFailed + ': ' +
+							( err && err.message ? err.message : config.i18n.requestError );
+					} )
+					.then( function () {
+						button.disabled = false;
+					} );
+			} );
+		} );
+	}
+
+	wirePremiumUploads();
 } )();

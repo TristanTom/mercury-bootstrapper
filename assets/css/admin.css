@@ -102,3 +102,52 @@
 	from { transform: rotate( 0deg ); }
 	to   { transform: rotate( 360deg ); }
 }
+
+.wrap.mercury-bootstrapper ul.mercury-premium-uploads {
+	margin: 8px 0 20px;
+	padding: 0;
+	list-style: none !important;
+	max-width: 720px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+}
+
+.wrap.mercury-bootstrapper .mercury-premium-uploads > li.mercury-premium-upload {
+	display: grid;
+	grid-template-columns: 180px 1fr auto auto;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+	padding: 10px 14px;
+	border-bottom: 1px solid #e5e7eb;
+	list-style: none !important;
+}
+
+.mercury-premium-upload:last-child {
+	border-bottom: 0;
+}
+
+.mercury-premium-upload__label {
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.mercury-premium-upload__input {
+	font-size: 12px;
+}
+
+.mercury-premium-upload__status {
+	grid-column: 1 / -1;
+	font-size: 12px;
+	color: #646970;
+	padding-top: 2px;
+}
+
+.mercury-premium-upload__status.is-ok {
+	color: #00a32a;
+}
+
+.mercury-premium-upload__status.is-error {
+	color: #d63638;
+}
