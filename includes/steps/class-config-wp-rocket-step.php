@@ -60,6 +60,8 @@ class Mercury_Bootstrapper_Config_Wp_Rocket_Step extends Mercury_Bootstrapper_St
 		return array(
 			'minify_css'          => 1,
 			'minify_js'           => 1,
+			'async_css'           => 1,
+			'remove_unused_css'   => 0,
 			'defer_all_js'        => 1,
 			'delay_js'            => 0,
 			'lazyload'            => 1,
