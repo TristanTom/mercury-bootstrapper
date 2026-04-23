@@ -57,6 +57,7 @@ final class Mercury_Bootstrapper_Plugin {
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-install-plugin-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-install-premium-plugin-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-config-elementor-step.php';
+		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-config-yoast-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-homepage-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/steps/class-security-step.php';
 		require_once MERCURY_BOOTSTRAPPER_DIR . 'includes/class-premium-uploads.php';
@@ -78,6 +79,7 @@ final class Mercury_Bootstrapper_Plugin {
 		$this->runner->register_step( new Mercury_Bootstrapper_Install_Plugin_Step( 'elementor', 'Elementor' ) );
 		$this->runner->register_step( new Mercury_Bootstrapper_Config_Elementor_Step() );
 		$this->runner->register_step( new Mercury_Bootstrapper_Install_Plugin_Step( 'wordpress-seo', 'Yoast SEO' ) );
+		$this->runner->register_step( new Mercury_Bootstrapper_Config_Yoast_Step() );
 		$this->runner->register_step( new Mercury_Bootstrapper_Install_Plugin_Step( 'updraftplus', 'UpdraftPlus' ) );
 		$this->runner->register_step( new Mercury_Bootstrapper_Install_Plugin_Step( 'ewww-image-optimizer', 'EWWW Image Optimizer' ) );
 		$this->runner->register_step( new Mercury_Bootstrapper_Install_Plugin_Step( 'complianz-gdpr', 'Complianz GDPR/CCPA Cookie Consent' ) );
